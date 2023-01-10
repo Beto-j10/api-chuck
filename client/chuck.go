@@ -11,7 +11,6 @@ import (
 
 func ClientChuck() (*models.Chucks, error) {
 
-	// set the limit of concurrent requests
 	wg := sync.WaitGroup{}
 	chucks := &models.Chucks{}
 	lock := sync.Mutex{}
