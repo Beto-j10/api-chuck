@@ -3,6 +3,11 @@
 ```sh
 docker-compose up
 ```
+## To access the API
+```sh
+http://localhost:8085/api/v1/chuck
+```
+
 ## Development Environment
 If you do not want to use **`air`**, you will need to uncomment the following lines in the **`dev.Dockerfile file:`**
 ```sh
