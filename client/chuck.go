@@ -14,6 +14,7 @@ func ClientChuck() (*models.Chucks, error) {
 	c := make(chan int, 4)
 	wg := sync.WaitGroup{}
 	chucks := &models.Chucks{}
+	lock := sync.Mutex{}
 
 	for i := 0; i < 25; i++ {
 
@@ -33,7 +34,9 @@ func ClientChuck() (*models.Chucks, error) {
 			if err := json.NewDecoder(resp.Body).Decode(chuck); err != nil {
 				log.Fatal(err)
 			}
+			lock.Lock()
 			chucks.Chucks = append(chucks.Chucks, *chuck)
+			lock.Unlock()
 			<-c
 		}(chucks)
 	}
