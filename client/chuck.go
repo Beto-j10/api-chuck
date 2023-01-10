@@ -6,24 +6,27 @@ import (
 	"net/http"
 	"prueba/models"
 	"sync"
+	"time"
 )
 
 func ClientChuck() (*models.Chucks, error) {
 
 	// set the limit of concurrent requests
-	c := make(chan int, 4)
 	wg := sync.WaitGroup{}
 	chucks := &models.Chucks{}
 	lock := sync.Mutex{}
+
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
 
 	for i := 0; i < 25; i++ {
 
 		wg.Add(1)
 
-		c <- 1
 		go func(chucks *models.Chucks) {
 			defer wg.Done()
-			resp, err := http.Get("https://api.chucknorris.io/jokes/random")
+			resp, err := client.Get("https://api.chucknorris.io/jokes/random")
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -37,7 +40,6 @@ func ClientChuck() (*models.Chucks, error) {
 			lock.Lock()
 			chucks.Chucks = append(chucks.Chucks, *chuck)
 			lock.Unlock()
-			<-c
 		}(chucks)
 	}
 
